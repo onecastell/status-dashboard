@@ -27,6 +27,18 @@ const pointsGraph = ForceGraph3D()
     .linkDirectionalParticleSpeed(.005)
     .graphData(dataSource)
 
+setTimeout(() => {
+    let angle = 0;
+    setInterval(() => {
+        // Rotate camera
+        pointsGraph.cameraPosition({
+            x: 100 * Math.sin(angle),
+            z: 100 * Math.cos(angle)
+        });
+        angle += Math.PI / 5000;
+    }, 10);
+}, 600);
+
 // Ping each server
 for (let [index, server] of servers.entries()) {
     // console.log(server, index)
