@@ -1,19 +1,19 @@
 import ForceGraph3D from '3d-force-graph'
-
+import SpriteText from 'three-spritetext'
 // API Server entries
 const servers = [
-    { id: 'facebook', uri: 'https://www.facebook.com/platform/api-status/' },
-    { id: 'twitter', uri: 'https://api.twitterstat.us/api/v2/status.json' },
-    { id: 'github', uri: 'https://www.githubstatus.com/api/v2/status.json' },
-    { id: 'reddit', uri: 'https://reddit.statuspage.io/api/v2/status.json' },
-    { id: 'dropbox', uri: 'https://status.dropbox.com/api/v2/status.json' },
+    { label: 'facebook', uri: 'https://www.facebook.com/platform/api-status/' },
+    { label: 'twitter', uri: 'https://api.twitterstat.us/api/v2/status.json' },
+    { label: 'github', uri: 'https://www.githubstatus.com/api/v2/status.json' },
+    { label: 'reddit', uri: 'https://reddit.statuspage.io/api/v2/status.json' },
+    { label: 'dropbox', uri: 'https://status.dropbox.com/api/v2/status.json' },
     // { id: 'reddit', uri: '' },
 ]
 
 
 const dataSource = {
     //  Define nodes
-    nodes: [...servers.keys()].map(n => ({ id: n, group: 2 })),
+    nodes: [...servers.keys()].map(n => ({ id: n, label: servers[n].label })),
     //  Define links 
     links: [...servers.keys()].map(id => ({ source: id, target: 0 }))
 }
@@ -23,6 +23,14 @@ const pointsGraph = ForceGraph3D()
     .backgroundColor('#f5f5f5')
     .showNavInfo(false)
     .cameraPosition({ z: 100 }, null, 500)
+    .nodeThreeObjectExtend(true)
+    .nodeThreeObject(node=>{
+        const text = new SpriteText(node.label)
+        text.color = '#15151599'
+        text.textHeight = 3.5
+        text.position.x = -(text._text.length * 1.75)
+        return text
+    })
     .linkDirectionalParticles(d => Math.floor(Math.random() * 7))
     .linkDirectionalParticleSpeed(.005)
     .graphData(dataSource)
@@ -45,7 +53,7 @@ for (let [index, server] of servers.entries()) {
     fetch('https://cors-anywhere.herokuapp.com/'.concat(server.uri))
         .then(r => r.json())
         .then(d => {
-            switch (server.id) {
+            switch (server.label) {
                 case 'facebook':
                     d.current.health === 1
                         ? dataSource.nodes[index].color = '#0f0'
