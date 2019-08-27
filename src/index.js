@@ -7,9 +7,7 @@ const servers = [
     { label: 'github', uri: 'https://www.githubstatus.com/api/v2/status.json' },
     { label: 'reddit', uri: 'https://reddit.statuspage.io/api/v2/status.json' },
     { label: 'dropbox', uri: 'https://status.dropbox.com/api/v2/status.json' },
-    // { id: 'reddit', uri: '' },
 ]
-
 
 const dataSource = {
     //  Define nodes
@@ -18,7 +16,7 @@ const dataSource = {
     links: [...servers.keys()].map(id => ({ source: id, target: 0 }))
 }
 
-const pointsGraph = ForceGraph3D()
+const graph = ForceGraph3D()
     (document.body)
     .backgroundColor('#f5f5f5')
     .showNavInfo(false)
@@ -31,6 +29,7 @@ const pointsGraph = ForceGraph3D()
         text.position.x = -(text._text.length * 1.75)
         return text
     })
+    .nodeResolution(16)
     .linkDirectionalParticles(d => Math.floor(Math.random() * 7))
     .linkDirectionalParticleSpeed(.005)
     .graphData(dataSource)
@@ -39,7 +38,7 @@ setTimeout(() => {
     let angle = 0;
     setInterval(() => {
         // Rotate camera
-        pointsGraph.cameraPosition({
+        graph.cameraPosition({
             x: 100 * Math.sin(angle),
             z: 100 * Math.cos(angle)
         });
@@ -49,8 +48,7 @@ setTimeout(() => {
 
 // Ping each server
 for (let [index, server] of servers.entries()) {
-    // console.log(server, index)
-    fetch('https://cors-anywhere.herokuapp.com/'.concat(server.uri))
+    fetch('https://cors-anywhere.herokuapp.com/' + server.uri)
         .then(r => r.json())
         .then(d => {
             switch (server.label) {
@@ -68,6 +66,6 @@ for (let [index, server] of servers.entries()) {
                         : dataSource.nodes[index].color = '#f00'
                     break
             }
-            pointsGraph.nodeRelSize(4) // Update Graph
+            graph.nodeRelSize(4) // Update Graph
         })
 }
