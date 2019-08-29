@@ -34,17 +34,17 @@ const graph = ForceGraph3D()
     .linkDirectionalParticleSpeed(.005)
     .graphData(dataSource)
 
-setTimeout(() => {
-    let angle = 0;
-    setInterval(() => {
-        // Rotate camera
-        graph.cameraPosition({
-            x: 100 * Math.sin(angle),
-            z: 100 * Math.cos(angle)
-        });
-        angle += Math.PI / 5000;
-    }, 10);
-}, 600);
+// setTimeout(() => {
+//     let angle = 0;
+//     setInterval(() => {
+//         // Rotate camera
+//         graph.cameraPosition({
+//             x: 100 * Math.sin(angle),
+//             z: 100 * Math.cos(angle)
+//         });
+//         angle += Math.PI / 5000;
+//     }, 10);
+// }, 600);
 
 // Ping each server
 for (let [index, server] of servers.entries()) {
@@ -68,4 +68,24 @@ for (let [index, server] of servers.entries()) {
             }
             graph.nodeRelSize(4) // Update Graph
         })
+}
+
+// Add Overlay
+const overlay = document.createElement('main')
+document.body.appendChild(overlay)
+
+// Populate Overlay
+for (let [index,server] of servers.entries()){
+    const button = document.createElement('button')
+    button.title = server.label
+    button.addEventListener('mouseover',event=>{
+        const node = dataSource.nodes[index]
+        console.log(node)
+        graph.cameraPosition({
+            x: node.x,
+            y: node.y,
+            z: node.z + 50
+        },node,2000);
+    })
+    overlay.appendChild(button)
 }
