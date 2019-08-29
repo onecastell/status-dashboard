@@ -25,6 +25,7 @@ const graph = ForceGraph3D()
     .nodeThreeObject(node=>{
         const text = new SpriteText(node.label)
         text.color = '#15151599'
+        text.fontFace = 'Teko'
         text.textHeight = 3.5
         text.position.x = -(text._text.length * 1.75)
         return text
