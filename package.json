@@ -1,11 +1,11 @@
 {
   "name": "force-graph-lab",
   "version": "1.0.0",
-  "description": "",
+  "description": "Force graph dashboard representing real-time operational status of services like Facebook and Dropbox.",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode=production",
-    "start": "webpack-dev-server --open --port 6969"
+    "start": "webpack-dev-server --open --port 8080"
   },
   "keywords": [],
   "author": "Franklin Castellanos",
